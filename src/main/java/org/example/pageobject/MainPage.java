@@ -11,12 +11,18 @@ import java.time.Duration;
 
 public class MainPage {
     public static String MAIN_PAGE_URL = "https://qa-scooter.praktikum-services.ru/";
+
+    public static final int WAIT_TIMEOUT_2_SEC = 2;
+
     private By statusOrderButton = By.xpath(".//button[contains(@class, 'Header_Link')]");
     private By orderNumberInput = By.xpath(".//div[starts-with(@class,'Input_InputContainer')]/input[@type='text']");
     private By goButton = By.xpath(".//div[starts-with(@class,'Header_SearchInput')]/button[text()='Go!']");
     private By cookieButton = By.xpath(".//button[contains(@class, 'App_CookieButton')]");
+    private By faqAccordionQuestionDiv = By.xpath(".//div[contains(@class, 'accordion__heading')]");
+    private By faqOppenedAnswerP = By.xpath(".//div[contains(@class, 'accordion__panel') and not(@hidden)]/p");
     private final String FAQ_QUESTION_PATTERN = ".//div[contains(@id, 'accordion__heading') and contains(text(), '%s')]";
-
+    private By headerOrderButton = By.xpath(".//div[contains(@class, 'Header')]/button[text() = 'Заказать']");
+    private By bottomOrderButton = By.xpath(".//div[contains(@class, 'Home_FinishButton')]/button[text() = 'Заказать']");
     protected WebDriver driver;
 
     public MainPage(WebDriver driver){
@@ -28,13 +34,21 @@ public class MainPage {
     }
 
     public void statusOrderButtonClick(){
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(MainPage.WAIT_TIMEOUT_2_SEC))
                 .until(ExpectedConditions.elementToBeClickable(statusOrderButton));
         driver.findElement(statusOrderButton).click();
     }
 
+    public String getFAQAnswerByQuestionText(String question){
+        scrollToElement(driver.findElement(faqAccordionQuestionDiv));
+        faqQuestionClick(question);
+        new WebDriverWait(driver, Duration.ofSeconds(MainPage.WAIT_TIMEOUT_2_SEC))
+                .until(ExpectedConditions.visibilityOfElementLocated(faqOppenedAnswerP));
+        return driver.findElement(faqOppenedAnswerP).getText();
+    }
+
     public void setOrderNumber(String newValue){
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(MainPage.WAIT_TIMEOUT_2_SEC))
                 .until(ExpectedConditions.visibilityOfElementLocated(orderNumberInput));
         WebElement orderNumberWebElement = driver.findElement(orderNumberInput);
         orderNumberWebElement.clear();
@@ -42,21 +56,45 @@ public class MainPage {
     }
 
     public void goButtonClick(){
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(MainPage.WAIT_TIMEOUT_2_SEC))
                 .until(ExpectedConditions.elementToBeClickable(goButton)).click();
-       // driver.findElement(goButton).click();
     }
 
-    private void scrollToElement(WebElement element){
+    public void scrollToElement(WebElement element){
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 
     public void cookieButtonClick(){
-        WebElement button = driver.findElement(cookieButton);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(button)).click();
+        WebElement cookieBtn = driver.findElement(cookieButton);
+        waitBeforeClick(MainPage.WAIT_TIMEOUT_2_SEC, cookieBtn);
+        cookieBtn.click();
+    }
+
+    public void faqQuestionClick(String question){
+        WebElement questionElement = driver.findElement(By.xpath(String.format(FAQ_QUESTION_PATTERN, question)));
+        waitBeforeClick(MainPage.WAIT_TIMEOUT_2_SEC, questionElement);
+        questionElement.click();
+    }
+
+    public void headerOrderButtonClick(){
+        waitBeforeClick(MainPage.WAIT_TIMEOUT_2_SEC,headerOrderButton);
+        driver.findElement(headerOrderButton).click();
+    }
+
+    public void bottomOrderButtonClick(){
+        waitBeforeClick(MainPage.WAIT_TIMEOUT_2_SEC, bottomOrderButton);
+        driver.findElement(bottomOrderButton).click();
+    }
 
 
+    private void waitBeforeClick(int timeout, By element){
+        new WebDriverWait(driver, Duration.ofSeconds(timeout))
+                .until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    private void waitBeforeClick(int timeout, WebElement element){
+        new WebDriverWait(driver, Duration.ofSeconds(timeout))
+                .until(ExpectedConditions.elementToBeClickable(element));
     }
 
 

@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class TrackPage {
     private WebDriver driver;
-    private By notFoundImg = By.xpath("");
+    private By notFoundImg = By.xpath(".//img[@alt = 'Not found']");
 
     public TrackPage(WebDriver driver) {
         this.driver = driver;

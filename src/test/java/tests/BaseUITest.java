@@ -1,7 +1,10 @@
 package tests;
 
+import org.example.pageobject.MainPage;
+import org.example.pageobject.OrderPage;
 import org.junit.After;
 import org.junit.Before;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -9,12 +12,11 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.time.Duration;
 
 public class BaseUITest {
-    protected SafariDriver driver;
+    protected ChromeDriver driver;
 
     @Before
     public void startUp(){
-        initSafari();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        initChrome();
     }
 
     @After
@@ -22,13 +24,21 @@ public class BaseUITest {
         driver.quit();
     }
 
-//    public void initChrome(){
-//        driver = new ChromeDriver();
-//    }
-
-    public void initSafari(){
-        driver = new SafariDriver();
+    public void initChrome(){
+        driver = new ChromeDriver();
     }
+
+    protected MainPage openMainPage(WebDriver driver){
+        MainPage mainPage = new MainPage(driver);
+        mainPage.openMainPage();
+        mainPage.cookieButtonClick();
+        return mainPage;
+    }
+
+
+    //public void initSafari(){
+//        driver = new SafariDriver();
+//    }
 
 //    public void initFirefox(){
 //        driver = new FirefoxDriver();
