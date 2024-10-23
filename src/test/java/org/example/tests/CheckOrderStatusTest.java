@@ -1,24 +1,24 @@
-package tests;
+package org.example.tests;
 
 import org.example.pageobject.MainPage;
-import org.example.pageobject.OrderPage;
 import org.example.pageobject.TrackPage;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+
 
 public class CheckOrderStatusTest extends BaseUITest {
+    private final String INCORRECT_ORDER = "1";
 
 
     @Test
-    public void checkOrderStatusNotExistTest(){
+    public void OrderStatusNotExistTest() {
         MainPage mainPage = openMainPage(driver);
         mainPage.statusOrderButtonClick();
-        mainPage.setOrderNumber("4455");
+        mainPage.setOrderNumber(INCORRECT_ORDER);
         mainPage.goButtonClick();
 
         TrackPage trackPage = new TrackPage(driver);
-        Assert.assertTrue(trackPage.isDisplayedNotFoundOrderImg());
+        Assert.assertTrue("Expected NotFoung img to be shown.", trackPage.isDisplayedNotFoundOrderImg());
     }
 
 }

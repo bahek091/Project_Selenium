@@ -1,4 +1,4 @@
-package tests;
+package org.example.tests;
 
 
 import org.example.pageobject.MainPage;
@@ -12,12 +12,8 @@ public class CheckLogoLinksTest extends BaseUITest{
     public void shouldOpenYandexPageOnYandexLogoClick(){
         OrderPage orderPage = new OrderPage(driver);
         orderPage.openOrderPage();
-        orderPage.clickYandexLogo();
-        driver.switchTo();
-        Object[] windowHandles=driver.getWindowHandles().toArray();
-        driver.switchTo().window((String) windowHandles[1]);
-
-        Assert.assertTrue(OrderPage.YANDEX_URL.equals(driver.getCurrentUrl()));
+        orderPage.clickYaLogoAndPageLoad();
+        Assert.assertTrue("Expected dzen.ru is openned in new tab.", OrderPage.YANDEX_URL.equals(driver.getCurrentUrl()));
     }
 
     @Test

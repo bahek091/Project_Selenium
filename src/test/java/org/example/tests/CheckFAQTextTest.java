@@ -1,4 +1,4 @@
-package tests;
+package org.example.tests;
 
 import org.example.pageobject.MainPage;
 import org.junit.Assert;
@@ -29,7 +29,7 @@ public class CheckFAQTextTest extends BaseUITest{
     public void shouldBeCorrectFAQAnswersTest(){
         MainPage mainPage = openMainPage(driver);
 
-        Assert.assertTrue(answerText.equals(mainPage.getFAQAnswerByQuestionText(questionText)));
+        Assert.assertTrue("Answer differs from origin value.", answerText.equals(mainPage.getFAQAnswerByQuestionText(questionText)));
     }
 
 }
